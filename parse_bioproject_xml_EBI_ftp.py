@@ -68,9 +68,6 @@ url = base + '?accession=' + project + '&result=' + result + '&fields=' + fields
 
 download_links = pd.read_csv(url, sep = '\t')
 
-# Check download is correct
-download_links.head()
-
 # Merge data parsed from XML with ftp links for sequencing data from EBI
 df = df.merge(download_links, how = 'left', left_on = 'SRA_accession', right_on = 'secondary_sample_accession')
 
