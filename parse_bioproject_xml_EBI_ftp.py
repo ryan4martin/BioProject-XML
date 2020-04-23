@@ -1,16 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
-
 import pandas as pd 
 import xml.etree.ElementTree as etree
 from Bio import Entrez
-
-
-# In[5]:
-
 
 # Set URL for XML file with all BioSamples associated with project
 from urllib.request import urlopen
@@ -19,10 +9,6 @@ xml_file = urlopen(url)
 
 tree = etree.parse(xml_file)
 root = tree.getroot()
-
-
-# In[6]:
-
 
 # Append list of each all attributes for each sample within XML
 all_samples = []
@@ -38,10 +24,6 @@ for child in root:
       samples.append(elements)
   all_samples.append(samples)
 
-
-# In[7]:
-
-
 # Replace all spaces with underscores to remove duplicates
 for i in range(len(all_samples)):
   for num in range(len(all_samples[i][5])):
@@ -54,10 +36,6 @@ for i in range(len(all_samples)):
     features.append(x)
 features = set(features)
 len(features)
-
-
-# In[8]:
-
 
 #Left join each sample by feature to create dataframe with all samples
 
@@ -74,22 +52,9 @@ for i in range(len(all_samples)):
 # Transpose so each row is a subject and each column is sample
 df = df.T
 
-
-# In[9]:
-
-
-df.head()
-
-
-# In[45]:
-
-
+# Reset dataframe index
 df.reset_index(inplace = True)
 df.rename(columns = {'index' : 'samples'}, inplace= True)
-
-
-# In[4]:
-
 
 # Build link to project on EBI and download sample data
 
@@ -105,10 +70,6 @@ download_links = pd.read_csv(url, sep = '\t')
 
 # Check download is correct
 download_links.head()
-
-
-# In[46]:
-
 
 # Merge data parsed from XML with ftp links for sequencing data from EBI
 df = df.merge(download_links, how = 'left', left_on = 'SRA_accession', right_on = 'secondary_sample_accession')
